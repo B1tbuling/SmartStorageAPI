@@ -1,3 +1,5 @@
+import uuid
+
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -5,7 +7,6 @@ from scemas import SensorData, SensorOneData, SensorTwoData, SensorThreeData, Us
 
 
 class Postgres:
-    # Connect to an existing database
     HOST = '127.0.0.1'
     PORT = 5432
     USER = 'postgres'
@@ -32,19 +33,19 @@ def get_last_three_value():
         return [SensorData(**elemnt) for elemnt in cur.fetchall()]
 
 
-def get_sensor_temp_data(limit = 1):
+def get_sensor_temp_data(limit=1):
     with Postgres() as cur:
-        cur.execute(f'SELECT "Temperature","Time" FROM "SensorsData" ORDER BY "Time" desc limit {limit}') 
+        cur.execute(f'SELECT "Temperature","Time" FROM "SensorsData" ORDER BY "Time" desc limit {limit}')
         return [SensorOneData(**elemnt) for elemnt in cur.fetchall()]
 
 
-def get_sensor_hum_data(limit = 1):
+def get_sensor_hum_data(limit=1):
     with Postgres() as cur:
         cur.execute(f'SELECT "Humidity","Time" FROM "SensorsData" ORDER BY "Time" desc limit {limit}')
         return [SensorTwoData(**elemnt) for elemnt in cur.fetchall()]
 
 
-def get_sensor_co_data(limit = 1):
+def get_sensor_co_data(limit=1):
     with Postgres() as cur:
         cur.execute(f'SELECT "Co","Time" FROM "SensorsData" ORDER BY "Time" desc limit {limit}')
         return [SensorThreeData(**elemnt) for elemnt in cur.fetchall()]
@@ -63,10 +64,56 @@ def set_sensors(temp, hum, co):
 
 def get_users_data():
     with Postgres() as cur:
-        cur.execute(f'SELECT * FROM "Users" order by "Last_Action_Time" desc')
+        cur.execute(f'SELECT * FROM users order by last_action_time desc')
         return [User(**elemnt) for elemnt in cur.fetchall()]
 
 
-def activate_user(Id_Touch):
+def activate_user(id_touch):
     with Postgres() as cur:
-        cur.execute(f'UPDATE "Users" set "Exist" = Not "Exist", "Last_Action_Time" = now() where "ID_Touch" = \'{Id_Touch}\'')
+        cur.execute(f"UPDATE users SET exist = Not exist, last_action_time = now() where id_touch = '{id_touch}'")
+        cur.execute(f"INSERT INTO users_action (id_touch, exist, action_time) VALUES ('{id_touch}', (SELECT exist FROM users where id_touch = '{id_touch}'), now())")
+
+
+# def get_data_sensor(period):
+#     with Postgres() as cur:
+#         cur.execute(f"COPY (select ua.id, name, ua.exist, action_time from users join users_action ua on users.id_touch = ua.id_touch where action_time >= now() - interval '{period}') To '/filetest.csv' With CSV;")
+#         print(period)
+
+
+def get_data_sensor(period):
+    filename = uuid.uuid4()
+    with Postgres() as cur:
+        cur.execute(f"""
+        COPY (
+            select *
+            from "SensorsData" 
+            where "Time" >= now() - interval '{period} hours'
+            order by "Time" desc
+        )
+        To '/tmp/smart_storage/{filename}.csv'
+        With CSV
+        DELIMITER ',' 
+        HEADER;
+        """)
+        print(period)
+        return '/tmp/smart_storage/' + filename + '.csv'
+
+
+def get_data_user(period):
+    filename = uuid.uuid4()
+    with Postgres() as cur:
+        cur.execute(f"""
+        COPY (
+            select ua.id, name, ua.exist, action_time
+            from users
+            join users_action ua
+                on users.id_touch = ua.id_touch
+            where action_time >= now() - interval '{period}'
+        )
+        To '/tmp/smart_storage/{filename}.csv'
+        With CSV
+        DELIMITER ',' 
+        HEADER;
+        """)
+        print(period)
+        return '/tmp/smart_storage/' + filename + '.csv'

@@ -1,9 +1,10 @@
-from fastapi import FastAPI, Body
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import FileResponse
 
 from scemas import AddSensorsData, ActivateUser
-from db import get_last_three_value, get_sensor_temp_data, get_sensor_hum_data, get_sensor_co_data, set_sensors, \
-    get_users_data, activate_user
+from db import get_sensor_temp_data, get_sensor_hum_data, get_sensor_co_data, set_sensors, \
+    get_users_data, activate_user, get_data_sensor, get_data_user
 from services import form_data
 
 
@@ -16,11 +17,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.get("/")
-def get_data():
-    return get_last_three_value()
 
 
 @app.get("/temp")
@@ -53,5 +49,14 @@ def getUsers():
 
 
 @app.post("/activateUser")
-def activateUser(ID_Touch: ActivateUser):
-    activate_user(ID_Touch.ID_Touch)
+def activateUser(id_touch: ActivateUser):
+    activate_user(id_touch.id_touch)
+
+
+@app.get("/getStatisticSensor")
+def getDataSensor(period:str):
+    return FileResponse(filename=get_data_sensor(period))
+
+@app.get("/getStatisticUser")
+def getDataUser(period:str):
+    return FileResponse(filename=get_data_user(period))

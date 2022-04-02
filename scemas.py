@@ -36,10 +36,10 @@ class AddSensorsData(BaseModel):
 class User(BaseModel):
     id:int = None
     Name:str = None
-    ID_Touch:str = None
-    Position:str = None
-    Exist:bool = None
-    Last_Action_Time:datetime = None
+    id_touch:str = None
+    position:str = None
+    exist:bool = None
+    last_action_time:datetime = None
 
 class ActivateUser(BaseModel):
-    ID_Touch:str = None
+    id_touch:str = None
