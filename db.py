@@ -74,12 +74,6 @@ def activate_user(id_touch):
         cur.execute(f"INSERT INTO users_action (id_touch, exist, action_time) VALUES ('{id_touch}', (SELECT exist FROM users where id_touch = '{id_touch}'), now())")
 
 
-# def get_data_sensor(period):
-#     with Postgres() as cur:
-#         cur.execute(f"COPY (select ua.id, name, ua.exist, action_time from users join users_action ua on users.id_touch = ua.id_touch where action_time >= now() - interval '{period}') To '/filetest.csv' With CSV;")
-#         print(period)
-
-
 def get_data_sensor(period):
     filename = uuid.uuid4()
     with Postgres() as cur:
