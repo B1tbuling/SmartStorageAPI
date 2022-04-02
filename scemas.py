@@ -35,7 +35,7 @@ class AddSensorsData(BaseModel):
 
 class User(BaseModel):
     id:int = None
-    Name:str = None
+    name:str = None
     id_touch:str = None
     position:str = None
     exist:bool = None
