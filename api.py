@@ -60,5 +60,5 @@ def getDataSensor(period:str):
 
 @app.get("/getStatisticUser")
 def getDataUser(period:str):
-    users_data = get_data_sensor(period)
+    users_data = get_data_user(period)
     return FileResponse(users_data)
