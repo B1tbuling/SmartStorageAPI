@@ -91,7 +91,7 @@ def get_data_sensor(period):
             where time >= now() - interval '{period} hours'
             order by time desc
         )
-        To '/tmp/smart_storage/{filename}.csv'
+        To '/tmp/{filename}.csv'
         With CSV
         DELIMITER ',' 
         HEADER;
