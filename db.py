@@ -11,7 +11,7 @@ class Postgres:
     PORT = 5432
     USER = 'postgres'
     PASS = '51555'
-    NAME = 'SmartDB'
+    NAME = 'smartdb'
     
     def __init__(self):
         self.DATABASE_URL = f'postgresql://{self.USER}:{self.PASS}@{self.HOST}:{self.PORT}/{self.NAME}'
