@@ -29,37 +29,37 @@ class Postgres:
 
 def get_last_three_value():
     with Postgres() as cur:
-        cur.execute('SELECT * FROM "SensorsData" ORDER BY "Time" desc limit 3')
+        cur.execute('SELECT * FROM sensorsdata ORDER BY time desc limit 3')
         return [SensorData(**elemnt) for elemnt in cur.fetchall()]
 
 
 def get_sensor_temp_data(limit=1):
     with Postgres() as cur:
-        cur.execute(f'SELECT "Temperature","Time" FROM "SensorsData" ORDER BY "Time" desc limit {limit}')
+        cur.execute(f'SELECT temperature,time FROM sensorsdata ORDER BY time desc limit {limit}')
         return [SensorOneData(**elemnt) for elemnt in cur.fetchall()]
 
 
 def get_sensor_hum_data(limit=1):
     with Postgres() as cur:
-        cur.execute(f'SELECT "Humidity","Time" FROM "SensorsData" ORDER BY "Time" desc limit {limit}')
+        cur.execute(f'SELECT humidity,time FROM sensorsdata ORDER BY time desc limit {limit}')
         return [SensorTwoData(**elemnt) for elemnt in cur.fetchall()]
 
 
 def get_sensor_co_data(limit=1):
     with Postgres() as cur:
-        cur.execute(f'SELECT "Co","Time" FROM "SensorsData" ORDER BY "Time" desc limit {limit}')
+        cur.execute(f'SELECT co,time FROM sensorsdata ORDER BY time desc limit {limit}')
         return [SensorThreeData(**elemnt) for elemnt in cur.fetchall()]
 
 
 def get_sensors_data_by_time_period(period):
     with Postgres() as cur:
-        cur.execute(f'select * from "SensorsData" where "Time" >= now() - interval \'{period}\'')
+        cur.execute(f'select * from sensorsdata where time >= now() - interval \'{period}\'')
         return [SensorData(**elemnt) for elemnt in cur.fetchall()]
 
 
 def set_sensors(temp, hum, co):
     with Postgres() as cur:
-        cur.execute(f'INSERT INTO "SensorsData" ("Temperature","Humidity","Co","Time") VALUES ({temp},{hum},{co}, now())')
+        cur.execute(f'INSERT INTO sensorsdata (temperature,humidity,co,time) VALUES ({temp},{hum},{co}, now())')
 
 
 def get_users_data():
@@ -71,7 +71,14 @@ def get_users_data():
 def activate_user(id_touch):
     with Postgres() as cur:
         cur.execute(f"UPDATE users SET exist = Not exist, last_action_time = now() where id_touch = '{id_touch}'")
-        cur.execute(f"INSERT INTO users_action (id_touch, exist, action_time) VALUES ('{id_touch}', (SELECT exist FROM users where id_touch = '{id_touch}'), now())")
+        cur.execute(f"""
+            INSERT 
+            INTO users_action 
+            (id_touch, exist, action_time)
+            VALUES ('{id_touch}', 
+            (SELECT exist FROM users where id_touch = '{id_touch}'), 
+            now())
+        """)
 
 
 def get_data_sensor(period):
@@ -80,9 +87,9 @@ def get_data_sensor(period):
         cur.execute(f"""
         COPY (
             select *
-            from "SensorsData" 
-            where "Time" >= now() - interval '{period} hours'
-            order by "Time" desc
+            from sensorsdata 
+            where time >= now() - interval '{period} hours'
+            order by time desc
         )
         To '/tmp/smart_storage/{filename}.csv'
         With CSV

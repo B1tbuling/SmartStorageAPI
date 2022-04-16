@@ -24,10 +24,10 @@ def form_data(period: str, amount: int):
         for sensor_data in sensors_data_segment:
             if not sensor_data:
                 continue
-            co_values.append(sensor_data.Co)
-            hum_values.append(sensor_data.Humidity)
-            temp_values.append(sensor_data.Temperature)
-            time_values_append.append(sensor_data.Time)
+            co_values.append(sensor_data.co)
+            hum_values.append(sensor_data.humidity)
+            temp_values.append(sensor_data.temperature)
+            time_values_append.append(sensor_data.time)
         avg_co.append(round(mean(co_values)))
         avg_hum.append(round(mean(hum_values), 2))
         avg_temp.append(round(mean(temp_values), 1))

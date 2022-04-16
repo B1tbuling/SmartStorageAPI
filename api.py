@@ -40,7 +40,7 @@ def addData(period: str, amount: int):
 
 @app.post("/addSensors")
 def addData(data: AddSensorsData):
-    set_sensors(data.Temperature, data.Humidity, data.Co)
+    set_sensors(data.temperature, data.humidity, data.co)
 
 
 @app.get("/users")

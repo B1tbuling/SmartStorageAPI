@@ -1,36 +1,35 @@
-from typing import List, Optional
 from datetime import datetime
 
 from pydantic import BaseModel
 
 
 class SensorData(BaseModel):
-    Temperature:float = None
-    Humidity:float = None 
-    Co:float = None
-    Time:datetime = None
-    ID:int = None
+    id:int = None
+    temperature:float = None
+    humidity:float = None
+    co:float = None
+    time:datetime = None
 
 
 class SensorOneData(BaseModel):
-    Temperature:float = None
-    Time:datetime = None
+    temperature:float = None
+    time:datetime = None
 
 
 class SensorTwoData(BaseModel):
-    Humidity:float = None
-    Time:datetime = None 
+    humidity:float = None
+    time:datetime = None
 
 
 class SensorThreeData(BaseModel):
-    Co:float = None
-    Time:datetime = None 
+    co:float = None
+    time:datetime = None
 
 
 class AddSensorsData(BaseModel):
-    Temperature:float = None
-    Humidity:float = None 
-    Co:float = None
+    temperature:float = None
+    humidity:float = None
+    co:float = None
 
 
 class User(BaseModel):
