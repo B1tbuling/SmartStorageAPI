@@ -82,7 +82,7 @@ def activate_user(id_touch):
 
 
 def get_data_sensor(period):
-    filename = uuid.uuid4()
+    filename = str(uuid.uuid4())
     with Postgres() as cur:
         cur.execute(f"""
         COPY (
