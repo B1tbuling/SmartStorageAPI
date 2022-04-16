@@ -109,7 +109,7 @@ def get_data_user(period):
             from users
             join users_action ua
                 on users.id_touch = ua.id_touch
-            where action_time >= now() - interval '{period}'
+            where action_time >= now() - interval '{period} hours' 
         )
         To '/tmp/{filename}.csv'
         With CSV
