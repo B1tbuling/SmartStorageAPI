@@ -97,7 +97,7 @@ def get_data_sensor(period):
         HEADER;
         """)
         print(period)
-        return '/tmp/smart_storage/' + filename + '.csv'
+        return '/tmp/' + filename + '.csv'
 
 
 def get_data_user(period):
@@ -111,10 +111,10 @@ def get_data_user(period):
                 on users.id_touch = ua.id_touch
             where action_time >= now() - interval '{period}'
         )
-        To '/tmp/smart_storage/{filename}.csv'
+        To '/tmp/{filename}.csv'
         With CSV
         DELIMITER ',' 
         HEADER;
         """)
         print(period)
-        return '/tmp/smart_storage/' + filename + '.csv'
+        return '/tmp/' + filename + '.csv'
