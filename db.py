@@ -93,7 +93,7 @@ def get_data_sensor(period):
         )
         To '/tmp/{filename}.csv'
         With CSV
-        DELIMITER ',' 
+        DELIMITER ';' 
         HEADER;
         """)
         print(period)
@@ -113,7 +113,7 @@ def get_data_user(period):
         )
         To '/tmp/{filename}.csv'
         With CSV
-        DELIMITER ',' 
+        DELIMITER ';' 
         HEADER;
         """)
         print(period)

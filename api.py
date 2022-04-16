@@ -55,10 +55,10 @@ def activateUser(id_touch: ActivateUser):
 
 @app.get("/getStatisticSensor")
 def getDataSensor(period:str):
-    filename = get_data_sensor(period)
-    print(filename)
-    return FileResponse(filename)
+    sensor_data = get_data_sensor(period)
+    return FileResponse(sensor_data)
 
 @app.get("/getStatisticUser")
 def getDataUser(period:str):
-    return FileResponse(filename=get_data_user(period))
+    users_data = get_data_sensor(period)
+    return FileResponse(users_data)
