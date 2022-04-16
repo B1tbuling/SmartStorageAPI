@@ -101,7 +101,7 @@ def get_data_sensor(period):
 
 
 def get_data_user(period):
-    filename = uuid.uuid4()
+    filename = str(uuid.uuid4())
     with Postgres() as cur:
         cur.execute(f"""
         COPY (
