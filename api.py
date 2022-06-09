@@ -18,7 +18,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.get("/temp")
 def get_data(limit=1):
     return get_sensor_temp_data(limit)
@@ -37,6 +36,7 @@ def get_data(limit=1):
 @app.get("/getSensorsData")
 def addData(period: str, amount: int):
     return form_data(period, amount)
+
 
 @app.post("/addSensors")
 def addData(data: AddSensorsData):
@@ -57,6 +57,7 @@ def activateUser(id_touch: ActivateUser):
 def getDataSensor(period:str):
     sensor_data = get_data_sensor(period)
     return FileResponse(sensor_data)
+
 
 @app.get("/getStatisticUser")
 def getDataUser(period:str):
